@@ -5,21 +5,21 @@ param(
         Mandatory=$true,
         ValueFromPipeline =$true,
         ValueFromPipelineByPropertyName =$true,
-        HelpMessage = "Tag to be updated. eg: ./update-tag.ps1 NominalLedger fdssdfsfd 444"
+        HelpMessage = "Tag to be updated. eg: ./update-tag.ps1 nominalLedger fdssdfsfd 4444"
     )]
     [string]$Tag,
     [Parameter(
         Mandatory=$true,
         ValueFromPipeline =$true,
         ValueFromPipelineByPropertyName =$true,
-        HelpMessage = "Old Value. eg: ./update-tag.ps1 NominalLedger fdssdfsfd 444"
+        HelpMessage = "Old Value. eg: ./update-tag.ps1 nominalLedger fdssdfsfd 4444"
     )]
     [string]$OldValue,
     [Parameter(
         Mandatory=$true,
         ValueFromPipeline =$true,
         ValueFromPipelineByPropertyName =$true,
-        HelpMessage = "New Value. eg: ./update-tag.ps1 NominalLedger fdssdfsfd 444"
+        HelpMessage = "New Value. eg: ./update-tag.ps1 nominalLedger fdssdfsfd 4444"
     )]
     [string]$NewValue
 )
@@ -54,7 +54,8 @@ ForEach ($VM in $VMs)
         #Remove whole Tag not just Value
         $tags.remove($Tag)
         #Re-add Tag but with new Value
-        $tags.add($Tag,$NewValue)
+        #$tags.add($Tag,$NewValue)
+        $tags.add("nominalLedger",$NewValue)
         #Display New Tag Value
         write-host($VMName + "`t" + $tags[$Tag])
         #Following command applies the asjusted tags in one go
