@@ -1,4 +1,4 @@
-﻿# This script replaces a certain value with a new value on a specified Azure VM Tag
+﻿# This script replaces a specified current value of a specified tag with a new value, across all Azure VMs.
 
 param(
     [Parameter(
@@ -24,11 +24,11 @@ param(
     [string]$NewValue
 )
 
-#To logon & connect to Azure
-Login-AzureRmAccount
+#Uncomment if AZureRM module not already installed
+#Import-module AzureRM
 
-#Include if module not already installed - takes time to load
-# Import-module AzureRM
+#To logon & connect to Azure
+#Login-AzureRmAccount
 
 #Tags are updated as a single object. To add a tag to a resource that already includes tags,
 #first retrieve the existing tags. Add the new tag to the object that contains the existing tags,
@@ -60,7 +60,7 @@ ForEach ($VM in $VMs)
         write-host($VMName + "`t" + $tags[$Tag])
         #Following command applies the asjusted tags in one go
         #Comment next line out to test which VMs are selected and to check Tag gets updated and, only then, remove the comment
-        Set-AzureRmResource -ResourceGroupName $ResGroupVM -Name $VMName  -ResourceType "Microsoft.Compute/VirtualMachines" -Tag $tags -Force
+        #Set-AzureRmResource -ResourceGroupName $ResGroupVM -Name $VMName  -ResourceType "Microsoft.Compute/VirtualMachines" -Tag $tags -Force
         }
     }
 

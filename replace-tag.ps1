@@ -1,8 +1,31 @@
-﻿#Login-AzureRmAccount
-$oldTag = "BillTo"
-$newTag = "billTo"
-$VMs = Get-AzureRmVM
-ForEach ($VM in $VMs)
+﻿#This script replaces a current Tag name with a new Tag name, whilst maintaining the current $value
+
+param(
+    [Parameter(
+        Mandatory=$true,
+        ValueFromPipeline =$true,
+        ValueFromPipelineByPropertyName =$true,
+        HelpMessage = "Tag to be updated. eg: ./update-tag.ps1 nominalLedger fdssdfsfd 4444"
+    )]
+    [string]$oldTag = "BillTo",
+    [Parameter(
+        Mandatory=$true,
+        ValueFromPipeline =$true,
+        ValueFromPipelineByPropertyName =$true,
+        HelpMessage = "Old Value. eg: ./update-tag.ps1 nominalLedger fdssdfsfd 4444"
+    )]
+    [string]$newTag = "billTo"
+)
+
+#Uncomment if AZureRM module not already installed
+#Import-module AzureRM
+
+#To logon & connect to Azure
+#Login-AzureRmAccount
+
+$vms = Get-AzureRmVM
+
+ForEach ($vm in $vms)
     {
     #$vm.name
     #$vm.ResourceGroupName
