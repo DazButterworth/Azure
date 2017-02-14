@@ -1,10 +1,10 @@
 ﻿#Login-AzureRmAccount
-$newTag1 = "BillTo"
-$newValue1 = "N/A"
+$newTag1 = "billTo"
+$value1 = "N/A"
 $newTag2 = "SRID"
-$newValue2 = "Manual Build"
+$value2 = "Manual Build"
 $newTag3 = "dataClassification"
-$newValue3 = "Internal"
+$value3 = "Internal"
 $VMs = Get-AzureRmVM
 ForEach ($VM in $VMs)
     {

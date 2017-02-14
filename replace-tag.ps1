@@ -1,11 +1,11 @@
 ﻿#Login-AzureRmAccount
-$oldTag = "SR"
-$newTag = "SRID"
+$oldTag = "BillTo"
+$newTag = "billTo"
 $VMs = Get-AzureRmVM
 ForEach ($VM in $VMs)
     {
-    $vm.name
-    $vm.Tags.Count
+    #$vm.name
+    #$vm.ResourceGroupName
     #$vm.Tags | ft
     if ($vm.Tags[$oldTag])
         {
