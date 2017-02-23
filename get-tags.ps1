@@ -12,7 +12,7 @@ param(
         HelpMessage = "One or more computer names, separated by commas, followed by a space and then the Resource Group Name"
     )]
     [string[]]$VMNames,
-    [string]$Tag = "SRID",
+    [string]$Tag = "SR",
     [string]$ResGroupVM = "SS-INFRA-PROD-EUN-RG"
 )
 
@@ -28,6 +28,7 @@ Write-Host
 if ($VMNames -eq $null)
     {
     $VMs = Get-AzureRmVm
+    #$VMs = Get-AzureRmStorageAccount
     #Step through each VMName provided
     ForEach ($VM in $VMs){
         #Display Name and Tags
