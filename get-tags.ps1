@@ -12,7 +12,7 @@ param(
         HelpMessage = "One or more computer names, separated by commas, followed by a space and then the Resource Group Name"
     )]
     [string[]]$VMNames,
-    [string]$Tag = "SR",
+    [string]$Tag,
     [string]$ResGroupVM = "SS-INFRA-PROD-EUN-RG"
 )
 
@@ -33,13 +33,13 @@ if ($VMNames -eq $null)
     ForEach ($VM in $VMs){
         #Display Name and Tags
         $vm.Name
-        if ($Tag -eq "") # specific tag not specified so list all
-            {
-            $VM.tags | Format-Table
-            }
-        else # list a specific tag
+        if ($Tag) # list a specific tag
             {
             $VM.tags[$tag]
+            }
+        else # specific tag not specified so list all
+            {
+            $VM.tags | Format-Table
             }
         }
     }
