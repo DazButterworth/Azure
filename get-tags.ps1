@@ -27,19 +27,28 @@ Write-Host
 
 if ($VMNames -eq $null)
     {
-    $VMs = Get-AzureRmVm
-    #$VMs = Get-AzureRmStorageAccount
+    #$VMs = Get-AzureRmVm
+    $vms = Get-AzureRmStorageAccount
+    #$vms = Get-AzureRmAvailabilitySet -ResourceGroupName "ss-infra-prod-eun-rg"
+    #$vms = Get-AzureRmNetworkInterface
+    
     #Step through each VMName provided
     ForEach ($VM in $VMs){
         #Display Name and Tags
-        $vm.Name
+        #$vm.Name
+        #Storage Account uses different property for name
+        #$vm.StorageAccountName
         if ($Tag) # list a specific tag
             {
             $VM.tags[$tag]
+            #NIC uses singular property
+            #$vm.Tag[$tag]
             }
         else # specific tag not specified so list all
             {
             $VM.tags | Format-Table
+            #NIC uses singular property
+            #$vm.Tag | format-table
             }
         }
     }
