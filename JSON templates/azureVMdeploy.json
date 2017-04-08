@@ -1,0 +1,258 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the exisitng domain the new DC will be joining"
+      }
+    },
+    "domainUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "Username of the account who has permission to Domain join"
+      }
+    },
+    "domainPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password of the user who has permission to Domain join"
+      }
+    },
+    "VMadminUsername": {
+      "type": "string"
+    },
+    "VMadminPassword": {
+      "type": "securestring"
+    },
+    "location": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "storageAccountType": {
+      "type": "string"
+    },
+    "subnetName": {
+      "type": "string"
+    },
+    "virtualMachineName": {
+      "type": "string"
+    },
+    "virtualMachineSize": {
+      "type": "string"
+    },
+    "virtualNetworkID": {
+      "type": "string"
+    },
+    "authoriser": {
+      "type": "string"
+    },
+    "bFunction": {
+      "type": "string"
+    },
+    "billTo": {
+      "type": "string"
+    },
+    "bUnit": {
+      "type": "string"
+    },
+    "cc": {
+      "type": "string"
+    },
+    "cer": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "nominalLedger": {
+      "type": "string"
+    },
+    "projectNum": {
+      "type": "string"
+    },
+    "reqDate": {
+      "type": "string"
+    },
+    "requestor": {
+      "type": "string"
+    },
+    "serviceName": {
+      "type": "string"
+    },
+    "SRID": {
+      "type": "string"
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+      }
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Auto-generated token to access _artifactsLocation"
+      }
+    },
+    "JoinDomainUpdateTagVersion": {
+      "type": "string",
+      "defaultValue": "1.0",
+      "metadata": {
+        "description": "This value must be changed from a previous deployment to ensure the extension will run"
+      }
+    }
+  },
+  "variables": {
+    "subnetref": "[concat(parameters('virtualNetworkID'), '/Subnets/', parameters('subnetName'))]",
+    "networkInterfaceName": "[concat(parameters('virtualMachineName'), '_nic0')]",
+    "VMOSDiskName": "[concat(parameters('virtualMachineName'), '_osdisk')]",
+    "DSCJoinDomain": "joindomain.ps1\\joindomain",
+    "JoinDomainArchiveFolder": "dsc",
+    "JoinDomainArchiveFileName": "JoinDomain.zip"
+  },
+  "resources": [
+    {
+      "name": "[parameters('virtualMachineName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "tags": {
+        "authoriser": "[parameters('authoriser')]",
+        "bFunction": "[parameters('bFunction')]",
+        "billTo": "[parameters('billTo')]",
+        "bUnit": "[parameters('bUnit')]",
+        "cc": "[parameters('cc')]",
+        "cer": "[parameters('cer')]",
+        "dataClassification": "[parameters('dataClassification')]",
+        "environment": "[parameters('environment')]",
+        "managedBy": "[parameters('managedBy')]",
+        "nominalLedger": "[parameters('nominalLedger')]",
+        "projectNum": "[parameters('projectNum')]",
+        "reqDate": "[parameters('reqDate')]",
+        "requestor": "[parameters('requestor')]",
+        "serviceName": "[parameters('serviceName')]",
+        "SRID": "[parameters('SRID')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+      ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('virtualMachineName')]",
+          "adminUsername": "[parameters('VMadminUsername')]",
+          "adminPassword": "[parameters('VMadminPassword')]",
+          "windowsConfiguration": {
+            "provisionVmAgent": "true"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2012-R2-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[variables('VMOSDiskName')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('StorageAccountName'), '.blob.core.windows.net/vhds/', variables('VMOSDiskName'), '.vhd')]"
+            },
+            "createOption": "FromImage"
+          },
+          "dataDisks": [ ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        //{
+        //  "name": "JoinDomain",
+        //  "type": "extensions",
+        //  "location": "[resourceGroup().location]",
+        //  "apiVersion": "2015-06-15",
+        //  "dependsOn": [
+        //    "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+        //  ],
+        //  "properties": {
+        //    "publisher": "Microsoft.Powershell",
+        //    "type": "DSC",
+        //    "typeHandlerVersion": "2.9",
+        //    "autoUpgradeMinorVersion": true,
+        //    "settings": {
+        //      "modulesUrl": "[concat(parameters('_artifactsLocation'), '/', variables('JoinDomainArchiveFolder'), '/', variables('JoinDomainArchiveFileName'))]",
+        //      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+        //      "configurationFunction": "[variables('DSCJoinDomain')]",
+        //      "Properties": {
+        //        "DomainName": "[parameters('domainName')]",
+        //        "Credential": {
+        //          "UserName": "[parameters('DomainUserName')]",
+        //          "Password": "PrivateSettingsRef:AdminPassword"
+        //        }
+        //      }
+        //    },
+        //    "protectedSettings": {
+        //      "Items": {
+        //        "AdminPassword": "[parameters('DomainPassword')]"
+        //      }
+        //    }
+        //  }
+        //}
+      ]
+    },
+    {
+      "name": "[parameters('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    },
+    {
+      "name": "[variables('networkInterfaceName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [ ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetref')]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "adminUsername": {
+      "type": "string",
+      "value": "[parameters('VMadminUsername')]"
+    }
+  }
+}

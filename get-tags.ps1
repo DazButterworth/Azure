@@ -3,7 +3,7 @@
 #If VM Names aren't specified tags for all VMs are returned.
 #If Tag isn't specified all are returned, or if a default value for $Tag
 # has been defined then that tag will be returned.
-
+[CmdletBinding()]
 param(
     [Parameter(
         Mandatory=$false,
@@ -20,7 +20,7 @@ param(
 #Import-module AzureRM
 
 #To logon & connect to Azure
-#Login-AzureRmAccount
+#Login-AzureRmAccount -SubscriptionName 'Shared Services'
 
 #For formating purposes only
 Write-Host

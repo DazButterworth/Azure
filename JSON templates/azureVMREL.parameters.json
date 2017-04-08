@@ -1,0 +1,78 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "{adminUsername}"
+    },
+    "location": {
+      "value": "{location}"
+    },
+    "storageAccountName": {
+      "value": "{storageAccountName}"
+    },
+    "storageAccountType": {
+      "value": "{storageAccountType}"
+    },
+    "subnetName": {
+      "value": "{subnetName}"
+    },
+    "virtualMachineName": {
+      "value": "{virtualMachineName}"
+    },
+    "virtualMachineSize": {
+      "value": "{virtualMachineSize}"
+    },
+    "virtualNetworkID": {
+      "value": "{virtualNetworkID}"
+    },
+	"RHELSKU": {
+          "value":"{RHELSKU}"
+      },
+      "authoriser": {
+          "value": "{authoriser}"
+      },
+      "bFunction": {
+          "value": "{bFunction}"
+      },
+      "billTo": {
+          "value": "{billTo}"
+      },
+      "bUnit": {
+          "value": "{bUnit}"
+      },
+      "cc": {
+          "value": "{cc}"
+      },
+      "cer": {
+          "value": "{cer}"
+      },
+      "dataClassification": {
+          "value": "{dataClassification}"
+      },
+      "environment": {
+          "value": "{environment}"
+      },
+      "managedBy": {
+          "value": "{managedBy}"
+      },
+      "nominalLedger": {
+          "value": "{nominalLedger}"
+      },
+      "projectNum": {
+          "value": "{projectPR}"
+      },
+      "reqDate": {
+          "value": "{reqDate}"
+      },
+      "requestor": {
+          "value": "{requestor}"
+      },
+      "serviceName": {
+          "value": "{serviceName}"
+      },
+      "SRID": {
+          "value": "{SRID}"
+      }
+  }
+}

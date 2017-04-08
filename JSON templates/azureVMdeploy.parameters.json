@@ -1,0 +1,84 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "domainName": {
+      "value":  "{domainname}"
+    },
+    "domainUserName": {
+      "value":  "{DomainUserName}"
+    },
+    "VMadminUsername": {
+      "value": "{VMadminUsername}"
+    },
+    "location": {
+      "value": "{location}"
+    },
+    "storageAccountName": {
+      "value": "{storageAccountName}"
+    },
+    "storageAccountType": {
+      "value": "{storageAccountType}"
+    },
+    "subnetName": {
+      "value": "infra-subnet"
+    },
+    "virtualMachineName": {
+      "value": "{virtualMachineName}"
+    },
+    "virtualMachineSize": {
+      "value": "{virtualMachineSize}"
+    },
+    "virtualNetworkID": {
+      "value": "{virtualNetworkID}"
+    },
+    "authoriser": {
+          "value": "{authoriser}"
+      },
+      "bFunction": {
+          "value": "{bFunction}"
+      },
+      "billTo": {
+          "value": "{billTo}"
+      },
+      "bUnit": {
+          "value": "{bunit}"
+      },
+      "cc": {
+          "value": "{cc}"
+      },
+      "cer": {
+          "value": "{cer}"
+      },
+      "dataClassification": {
+          "value": "{dataClassification}"
+      },
+      "environment": {
+          "value": "{environment}"
+      },
+      "managedBy": {
+          "value": "{managedBy}"
+      },
+      "nominalLedger": {
+          "value": "{nominalLedger}"
+      },
+      "projectNum": {
+          "value": "{projectPR}"
+      },
+      "reqDate": {
+          "value": "{reqDate}"
+      },
+      "requestor": {
+          "value": "{requestor}"
+      },
+      "serviceName": {
+          "value": "{serviceName}"
+      },
+      "SRID": {
+          "value": "{SRID}"
+      },
+      "_artifactsLocation": {
+          "value": "https://ssscorchprodeunst01.blob.core.windows.net"
+      }
+  }
+}

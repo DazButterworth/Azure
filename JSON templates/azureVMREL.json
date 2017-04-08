@@ -1,0 +1,186 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "type": "string"
+    },
+    "VMadminPassword": {
+      "type": "securestring"
+    },
+    "location": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "storageAccountType": {
+      "type": "string"
+    },
+    "subnetName": {
+      "type": "string"
+    },
+    "virtualMachineName": {
+      "type": "string"
+    },
+    "virtualMachineSize": {
+      "type": "string"
+    },
+    "virtualNetworkID": {
+      "type": "string"
+    },
+    "RHELSKU": {
+      "type": "string",
+      "metadata": {
+        "description": "RHEL OS version to be deployed"
+      }
+    },
+    "authoriser": {
+      "type": "string"
+    },
+    "bFunction": {
+      "type": "string"
+    },
+    "billTo": {
+      "type": "string"
+    },
+    "bUnit": {
+      "type": "string"
+    },
+    "cc": {
+      "type": "string"
+    },
+    "cer": {
+      "type": "string"
+    },
+    "dataClassification": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "nominalLedger": {
+      "type": "string"
+    },
+    "projectNum": {
+      "type": "string"
+    },
+    "reqDate": {
+      "type": "string"
+    },
+    "requestor": {
+      "type": "string"
+    },
+    "serviceName": {
+      "type": "string"
+    },
+    "SRID": {
+      "type": "string"
+    }
+  },
+    "variables": {
+      "subnetref": "[concat(parameters('virtualNetworkID'), '/Subnets/', parameters('subnetName'))]",
+      "networkInterfaceName": "[concat(parameters('virtualMachineName'), '_nic0')]",
+      "VMOSDiskName": "[concat(parameters('virtualMachineName'), '_osdisk')]"
+    },
+  "resources": [
+    {
+      "name": "[parameters('virtualMachineName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "tags": {
+        "authoriser": "[parameters('authoriser')]",
+        "bFunction": "[parameters('bFunction')]",
+	"billTo": "[parameters('billTo')]",
+        "bUnit": "[parameters('bUnit')]",
+        "cc": "[parameters('cc')]",
+        "cer": "[parameters('cer')]",
+        "dataClassification": "[parameters('dataClassification')]",
+        "environment": "[parameters('environment')]",
+        "managedBy": "[parameters('managedBy')]",
+        "nominalLedger": "[parameters('nominalLedger')]",
+        "projectNum": "[parameters('projectNum')]",
+        "reqDate": "[parameters('reqDate')]",
+        "requestor": "[parameters('requestor')]",
+        "serviceName": "[parameters('serviceName')]",
+        "SRID": "[parameters('SRID')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+      ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('virtualMachineName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('VMadminPassword')]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "RedHat",
+            "offer": "RHEL",
+            "sku": "[parameters('RHELSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[variables('VMOSDiskName')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('StorageAccountName'), '.blob.core.windows.net/vhds/', variables('VMOSDiskName'), '.vhd')]"
+            },
+            "createOption": "FromImage"
+          },
+          "dataDisks": [ ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[parameters('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    },
+    {
+      "name": "[variables('networkInterfaceName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [ ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetref')]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
+            }
+          }
+        ]
+      }
+    }
+  ],
+    "outputs": {
+      "adminUsername": {
+        "type": "string",
+        "value": "[parameters('adminUsername')]"
+      }
+    }
+  }
